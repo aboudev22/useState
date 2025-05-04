@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Type pour une tâche
 type TaskProps = {
@@ -7,28 +7,31 @@ type TaskProps = {
 };
 
 export default function TaskManager() {
-  const [tasks, setTasks] = useState<TaskProps[]>([]);
+  const userTasks = localStorage.getItem("userTasks");
+  const parseTask: TaskProps[] = userTasks ? JSON.parse(userTasks) : [];
+  const [tasks, setTasks] = useState<TaskProps[]>(parseTask);
   const [textTask, setTextTask] = useState("");
 
-  // Ajout une tâche
   const addTask = () => {
     if (!textTask.trim()) return;
     setTasks([...tasks, { description: textTask, finished: false }]);
     setTextTask("");
   };
 
-  // Suppression de tâche
   const deleteTask = (index: number) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  // Marquer une tâche comme cochée/décochée
   const toggleTaskFinished = (index: number) => {
     const updatedTasks = tasks.map((task, i) =>
       i === index ? { ...task, finished: !task.finished } : task
     );
     setTasks(updatedTasks);
   };
+
+  useEffect(() => {
+    localStorage.setItem("userTasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <div className="w-screen h-screen flex flex-col items-center bg-neutral-800">
