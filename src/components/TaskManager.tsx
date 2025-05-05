@@ -1,37 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
-// Type pour une tâche
 type TaskProps = {
   description: string;
   finished: boolean;
 };
 
+type Action =
+  | { type: "add"; payload: string }
+  | { type: "delete"; payload: number }
+  | { type: "toggle"; payload: number }
+  | { type: "initialize"; payload: TaskProps[] };
+
+function taskReducer(state: TaskProps[], action: Action): TaskProps[] {
+  switch (action.type) {
+    case "add":
+      if (!action.payload.trim()) return state;
+      return [...state, { description: action.payload, finished: false }];
+    case "delete":
+      return state.filter((_, i) => i !== action.payload);
+    case "toggle":
+      return state.map((task, i) =>
+        i === action.payload ? { ...task, finished: !task.finished } : task
+      );
+    case "initialize":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 export default function TaskManager() {
-  const userTasks = localStorage.getItem("userTasks");
-  const parseTask: TaskProps[] = userTasks ? JSON.parse(userTasks) : [];
-  const [tasks, setTasks] = useState<TaskProps[]>(parseTask);
   const [textTask, setTextTask] = useState("");
 
-  const addTask = () => {
-    if (!textTask.trim()) return;
-    setTasks([...tasks, { description: textTask, finished: false }]);
-    setTextTask("");
+  const initialTasks = () => {
+    const userTasks = localStorage.getItem("userTasks");
+    return userTasks ? JSON.parse(userTasks) : [];
   };
+  const [tasks, dispatch] = useReducer(taskReducer, initialTasks());
 
-  const deleteTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  const toggleTaskFinished = (index: number) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, finished: !task.finished } : task
-    );
-    setTasks(updatedTasks);
-  };
-
+  // Sauvegarder dans le localStorage à chaque modification
   useEffect(() => {
     localStorage.setItem("userTasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  const handleAdd = () => {
+    dispatch({ type: "add", payload: textTask });
+    setTextTask("");
+  };
 
   return (
     <div className="w-screen h-screen flex flex-col items-center bg-neutral-800">
@@ -52,7 +67,7 @@ export default function TaskManager() {
             onChange={(e) => setTextTask(e.target.value)}
           />
           <button
-            onClick={addTask}
+            onClick={handleAdd}
             className="bg-neutral-800 active:bg-black cursor-pointer text-4xl font-bold px-4 rounded-md flex-none text-white"
           >
             +
@@ -64,8 +79,8 @@ export default function TaskManager() {
             key={index}
             description={task.description}
             finished={task.finished}
-            onToggle={() => toggleTaskFinished(index)}
-            onDelete={() => deleteTask(index)}
+            onToggle={() => dispatch({ type: "toggle", payload: index })}
+            onDelete={() => dispatch({ type: "delete", payload: index })}
           />
         ))}
       </div>
