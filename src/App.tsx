@@ -1,9 +1,9 @@
-import TaskManager from "./components/TaskManager";
+import NotificationsIOS from "./components/NotificationsIOS";
 
 export default function App() {
   return (
-    <div>
-      <TaskManager />
+    <div className="w-screen h-screen flex justify-center items-center">
+      <NotificationsIOS />
     </div>
   );
 }
