@@ -6,7 +6,7 @@ export default function NotificationsIOS() {
   const [isCollapse, setIsCollapse] = useState(false);
   const toggleCollapse = () => setIsCollapse(!isCollapse);
 
-  const cards = [0, 1, 2];
+  const cards = [0, 1, 2, 4, 5];
 
   return (
     <div className="w-sm h-96 bg-neutral-900 flex gap-2 flex-col px-4 pt-20 justify-start items-center relative overflow-hidden">
