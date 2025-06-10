@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
+import { motion } from "framer-motion";
 
 type TaskProps = {
   description: string;
@@ -49,7 +50,7 @@ export default function TaskManager() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center bg-neutral-800">
+    <motion.div className="w-screen h-screen flex flex-col items-center bg-neutral-800">
       <div className="flex justify-center items-center w-full h-1/6 bg-neutral-200">
         <h1 className="text-5xl bg-amber-100 p-5 mt-20 text-neutral-800 font-bold">
           Task Manager
@@ -84,7 +85,7 @@ export default function TaskManager() {
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
