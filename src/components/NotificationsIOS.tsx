@@ -30,7 +30,7 @@ export default function NotificationsIOS() {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-28 w-full h-full">
+      <div className="absolute top-[105px] w-full h-full">
         <div className="relative w-full h-full">
           {cards.map((_, i) => (
             <NotificationCard
