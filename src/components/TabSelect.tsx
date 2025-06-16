@@ -27,16 +27,14 @@ export default function TabSelect() {
       <motion.div
         layout
         animate={{ left: layoutProps.left, width: layoutProps.width }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
         className="absolute z-[2] top-1 bottom-1 bg-pink-500 rounded-md"
       />
       {tabs.map((tab, i) => (
         <p
           key={i}
           ref={(el) => {
-            if (el) {
-              tabsRef.current[i] = el;
-            }
+            if (el) tabsRef.current[i] = el;
           }}
           className="text-xs z-[5] p-2 active:scale-95 text-white cursor-pointer transition-all"
           onClick={() => setFocusTab(i)}
