@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+.fix-gap {
+  gap: 0.5rem; /* ou 8px */
+}
+
